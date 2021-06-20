@@ -1,0 +1,8 @@
+#!/bin/bash
+
+ncc build beep-beep-server.js -o dist/tmp/beep-beep-server
+# ncc build beep-beep-server.js -o dist/tmp/beep-beep-server --minify
+
+pkg --targets 'node16-macos-x64' dist/tmp/beep-beep-server/index.js -o dist/beep-beep-server
+
+# rm -rf dist/tmp
