@@ -1,0 +1,31 @@
+{
+  "name": "@pezza/beep-beep",
+  "version": "1.0.0-beta1",
+  "description": "beep-beep maintains a pool of shells in the background so that when it's time to create a new terminal session, one is already warmed up and ready to go.",
+  "type": "module",
+  "scripts": {
+    "dist": "./build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/npezza93/beep-beep.git"
+  },
+  "author": {
+    "name": "Nick Pezza",
+    "email": "pezza@hey.com"
+  },
+  "license": "MIT",
+  "bin": {
+    "beep-beep-server": "./beep-beep-server.js",
+    "beep-beep": "./beep-beep.js"
+  },
+  "bugs": {
+    "url": "https://github.com/npezza93/beep-beep/issues"
+  },
+  "homepage": "https://github.com/npezza93/beep-beep#readme",
+  "dependencies": {
+    "debounce-fn": "^5.0.0",
+    "node-pty": "^0.10.1"
+  }
+}
