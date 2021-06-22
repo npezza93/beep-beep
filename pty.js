@@ -10,23 +10,28 @@ export default class Pty {
     this.bufferedData = ''
     this.bufferTimeout = null
     this.dataEmitter = new EventEmitter()
-    this.connected = false
 
     this.pty = spawn(this.file, this.fileArgs, this.sessionArgs)
+    this.pty.pause()
     this.pty.onData(data => this.bufferData(data))
 
     this.server = createServer(c => {
       console.log(`[PID ${this.pid}] Connected to ${this.fd}`)
       c.on('end', this.kill.bind(this))
+      c.on('data', data => this.write(data))
+      this.pty.onExit(() => c.end())
     }).
-    listen(this.socket).
+    listen({ port: 0, exclusive: true }).
     on('connection', socket => {
-      this.connected = true
-      socket.write(this.bufferedData)
-      this.onData(data => socket.write(data))
+      this.pty.resume()
+      this.onData(data => {
+        if (socket.readyState === 'open') {
+          socket.write(data)
+        }
+      })
     })
 
-    console.log(`[PID ${this.pid}] Created ${this.fd}. Connect via ${this.socket}`)
+    console.log(`[PID ${this.pid}] Created ${this.fd}. Connect via localhost:${this.port}`)
   }
 
   get shell() {
@@ -41,21 +46,15 @@ export default class Pty {
     return this.pty._pty
   }
 
-  get socket() {
-    return `/tmp/beep-beep-${this.pid}.sock`
+  get port() {
+    return this.server.address().port
   }
 
   get sessionArgs() {
     return {
       name: 'xterm-256color',
       cwd: process.env.HOME,
-      env: {
-        // LANG: (api.app.getLocale() || '') + '.UTF-8',
-        LANG: "en-US.UTF-8",
-        TERM: 'xterm-256color',
-        COLORTERM: 'truecolor',
-        ...process.env
-      }
+      env: { TERM: 'xterm-256color', COLORTERM: 'truecolor', ...process.env }
     }
   }
 
@@ -100,11 +99,9 @@ export default class Pty {
     if (!this.bufferTimeout) {
       this.bufferTimeout = debounceFn(() => {
         this.dataEmitter.emit('data', this.bufferedData)
-        if (this.connected) {
-          this.bufferedData = ''
-        }
+        this.bufferedData = ''
         this.bufferTimeout = null
-      }, {wait: 7})()
+      }, {wait: 5})()
     }
   }
 }
