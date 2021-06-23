@@ -2,10 +2,14 @@ import Pty  from './pty.js'
 import logo from './logo.js'
 
 export default class Server {
-  constructor() {
+  constructor(queue, shell, args) {
+    this.queue = queue
+    this.shell = shell
+    this.args  = args
+    this.ptys = {}
+
     console.log(logo)
 
-    this.ptys = {}
     process.on('SIGINT', this.kill.bind(this))
   }
 
@@ -14,7 +18,7 @@ export default class Server {
   }
 
   create() {
-    let pty = new Pty(this.args[0], this.args[1])
+    let pty = new Pty(this.shell, this.args)
     this.ptys[pty.pid] = pty
   }
 
@@ -28,9 +32,5 @@ export default class Server {
     })
 
     process.exit(0)
-  }
-
-  get args() {
-    return process.argv.slice(2)
   }
 }

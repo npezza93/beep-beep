@@ -12,7 +12,7 @@ create a new terminal session, one is already warmed up and ready to go.
 
 ## API
 
-beep-beep --command "bin/zsh" --queue 2 --watch ".zshrc"
+`beep-beep server --shell "bin/zsh" --queue 2 --watch ".zshrc" --args '--login'`
 
 Anytime a file that is being watched is changed all the unused shells are thrown
 out and new ones are spawned.

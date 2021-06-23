@@ -17,7 +17,6 @@
   },
   "license": "MIT",
   "bin": {
-    "beep-beep-server": "./beep-beep-server.js",
     "beep-beep": "./beep-beep.js"
   },
   "bugs": {
@@ -25,6 +24,7 @@
   },
   "homepage": "https://github.com/npezza93/beep-beep#readme",
   "dependencies": {
+    "commander": "^7.2.0",
     "debounce-fn": "^5.0.0",
     "node-pty": "^0.10.1"
   }

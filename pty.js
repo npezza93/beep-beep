@@ -6,7 +6,7 @@ import EventEmitter from 'events'
 export default class Pty {
   constructor(file, fileArgs) {
     this.file = file
-    this.fileArgs = [fileArgs].filter(arg => !!arg)
+    this.fileArgs = (fileArgs || '').split(',').filter(arg => !!arg)
     this.bufferedData = ''
     this.bufferTimeout = null
     this.dataEmitter = new EventEmitter()
