@@ -20,10 +20,7 @@ program
 
 program
   .version(packageJson.version)
-  .arguments('<port>')
-  .action((port) => {
-    new Client(port).run()
-  })
+  .action(() => new Client().run())
 
 program.parse(process.argv)
 

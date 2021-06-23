@@ -1,3 +1,4 @@
+import {createServer} from 'net'
 import Pty  from './pty.js'
 import logo from './logo.js'
 
@@ -11,6 +12,16 @@ export default class Server {
     console.log(logo)
 
     process.on('SIGINT', this.shutdown.bind(this))
+    this.server = createServer(c => {
+      c.on('data', data => {
+        const parsedData = JSON.parse(data)
+
+        if (parsedData.action === 'connect') {
+          c.write(JSON.stringify(this.ptyPort()))
+        }
+      })
+    }).
+    listen('/tmp/beep-beep.sock')
   }
 
   run() {
@@ -48,6 +59,13 @@ export default class Server {
       }
     })
 
+    this.server.close()
     process.exit(0)
+  }
+
+  ptyPort() {
+    const pid = Object.keys(this.ptys).find(pid => !this.ptys[pid].connected)
+
+    return this.ptys[pid].port
   }
 }

@@ -1,19 +1,27 @@
 import {Socket} from 'net'
 
 export default class Client {
-  constructor(port) {
-    this.port = port
-    this.socket = new Socket()
-  }
-
   run() {
     process.stdin.setRawMode(true)
     process.stdin.setEncoding('utf8')
     process.stdin.resume()
 
-    this.socket.connect(this.port)
-    this.socket.on('end',  () => process.exit(0))
-    this.socket.on('data', data => process.stdout.write(data))
-    process.stdin.on('data',  data => this.socket.write(data))
+    let socket = new Socket()
+    socket.connect("/tmp/beep-beep.sock")
+    socket.on('data', port => {
+      socket.destroy()
+
+      port = parseInt(port.toString())
+      const ptySocket = new Socket()
+      ptySocket.connect(port)
+
+      ptySocket.on('end',  () => {
+        ptySocket.destroy()
+        process.exit(0)
+      })
+      ptySocket.on('data', data => process.stdout.write(data))
+      process.stdin.on('data',  data => ptySocket.write(data))
+    })
+    socket.write(JSON.stringify({ action: "connect"}))
   }
 }
