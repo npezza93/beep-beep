@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander'
-import Client      from './client.js'
-import Server      from './server.js'
+import Client      from './src/client.js'
+import Server      from './src/server.js'
 
 const program = new Command()
 

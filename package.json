@@ -17,7 +17,7 @@
   },
   "license": "MIT",
   "bin": {
-    "beep-beep": "./beep-beep.js"
+    "beep-beep": "./index.js"
   },
   "bugs": {
     "url": "https://github.com/npezza93/beep-beep/issues"
