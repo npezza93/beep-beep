@@ -4,8 +4,7 @@
   "description": "beep-beep maintains a pool of shells in the background so that when it's time to create a new terminal session, one is already warmed up and ready to go.",
   "type": "module",
   "scripts": {
-    "dist": "./build",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dist": "./build"
   },
   "repository": {
     "type": "git",
@@ -27,5 +26,8 @@
     "commander": "^7.2.0",
     "debounce-fn": "^5.0.0",
     "node-pty": "^0.10.1"
+  },
+  "pkg": {
+    "assets": "dist/tmp/beep-beep/build/Release/pty.node"
   }
 }

@@ -1,9 +1,11 @@
 #!/usr/bin/env node
 
 import { Command } from 'commander'
+import fs          from 'fs'
 import Client      from './src/client.js'
 import Server      from './src/server.js'
 
+const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'))
 const program = new Command()
 
 program
@@ -17,6 +19,7 @@ program
   })
 
 program
+  .version(packageJson.version)
   .arguments('<port>')
   .action((port) => {
     new Client(port).run()
