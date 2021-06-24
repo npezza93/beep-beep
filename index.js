@@ -5,7 +5,6 @@ import fs          from 'fs'
 import Client      from './src/client.js'
 import Server      from './src/server.js'
 
-const packageJson = JSON.parse(fs.readFileSync('package.json', 'utf8'))
 const program = new Command()
 
 program
@@ -19,7 +18,7 @@ program
   })
 
 program
-  .version(packageJson.version)
+  .version("1.0.0-beta1")
   .action(() => new Client().run())
 
 program.parse(process.argv)
