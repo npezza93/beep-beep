@@ -41,6 +41,15 @@ export default class Client {
   socket() {
     let socket = new Socket()
     socket.connect("/tmp/beep-beep.sock")
+    socket.on('error', (e) => {
+      if (e.code == 'ENOENT') {
+        console.error("Can't connect to beep-beep server. Make sure it is running by running the following:")
+        console.error("\n\tbeep-beep server -q 1 -s /bin/zsh")
+      } else {
+        console.error('Error booting beep-beep', e)
+      }
+      process.exit(1)
+    })
 
     return socket
   }
