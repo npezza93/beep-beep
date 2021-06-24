@@ -8,17 +8,24 @@ import Server      from './src/server.js'
 const program = new Command()
 
 program
+  .name('beep-beep')
   .command('server')
-  .description('run beep-beep server')
-  .requiredOption('-q, --queue <count>', 'How many ptys should be queued up', coerceInt)
-  .requiredOption('-s, --shell <file-path>', 'File path to the shell to run')
+  .option('-q, --queue <count>', 'How many ptys should be queued up', coerceInt, 1)
+  .option('-s, --shell <file-path>', 'File path to the shell to run', process.env.SHELL || '/bin/zsh')
   .option('-a, --args <args>', 'Arguments to passed to the shell (comma separated)')
+  .option('-c, --config-file <file-path>', 'Read options via specified config file')
+  .helpOption('-h, --help', 'Prints help information')
+  .addHelpText('before', `beep-beep-server\nRuns a beep-beep server of ptys\n`)
+  .usage('[OPTIONS]')
   .action((options) => {
     new Server(options.queue, options.shell, options.args).run()
   })
 
 program
-  .version("1.0.0-beta1")
+  .helpOption('-h, --help', 'Prints help information')
+  .version('beep-beep 1.0.0-beta1', '-v, --version', 'Prints version information')
+  .addHelpText('before', `${program.version()}\nNick Pezza <pezza@hey.com>\n`)
+  .usage('[OPTIONS] [SUBCOMMAND]')
   .action(() => new Client().run())
 
 program.parse(process.argv)
