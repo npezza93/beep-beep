@@ -18,6 +18,12 @@ export default class Server {
 
         if (parsedData.action === 'connect') {
           c.write(JSON.stringify(this.ptyPort()))
+        } else if (parsedData.action === 'resize') {
+          let pid = Object.keys(this.ptys).find(pid => {
+            return this.ptys[pid].port == parsedData.port
+          })
+
+          this.ptys[pid].resize(parsedData.columns, parsedData.rows)
         }
       })
     }).

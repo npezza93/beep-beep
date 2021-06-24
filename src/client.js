@@ -6,22 +6,49 @@ export default class Client {
     process.stdin.setEncoding('utf8')
     process.stdin.resume()
 
-    let socket = new Socket()
-    socket.connect("/tmp/beep-beep.sock")
+    let socket = this.socket()
     socket.on('data', port => {
       socket.destroy()
 
-      port = parseInt(port.toString())
+      this.port = parseInt(port.toString())
       const ptySocket = new Socket()
-      ptySocket.connect(port)
+      const resizeSocket = this.socket()
+
+      ptySocket.connect(this.port)
+
+      resizeSocket.write(this.resizeData())
 
       ptySocket.on('end',  () => {
         ptySocket.destroy()
+        resizeSocket.destroy()
         process.exit(0)
       })
       ptySocket.on('data', data => process.stdout.write(data))
       process.stdin.on('data',  data => ptySocket.write(data))
+      process.stdout.on('resize', () => resizeSocket.write(this.resizeData()))
     })
     socket.write(JSON.stringify({ action: "connect"}))
+  }
+
+  get columns() {
+    return process.stdout.columns
+  }
+
+  get rows() {
+    return process.stdout.rows
+  }
+
+  socket() {
+    let socket = new Socket()
+    socket.connect("/tmp/beep-beep.sock")
+
+    return socket
+  }
+
+  resizeData() {
+    return JSON.stringify({
+      action: "resize", port: this.port,
+      columns: this.columns, rows: this.rows
+    })
   }
 }
