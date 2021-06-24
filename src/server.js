@@ -36,7 +36,9 @@ export default class Server {
       }
     }
 
-    [...Array(this.queue - queuedCount)].forEach(this.create.bind(this))
+    const countToEnqueue = this.queue - queuedCount;
+
+    [...Array(Math.max(countToEnqueue, 0))].forEach(this.create.bind(this))
   }
 
   create() {
