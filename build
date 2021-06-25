@@ -1,7 +1,13 @@
 #!/bin/bash
 
-ncc build index.js -o dist/tmp/beep-beep
+rm -rf dist
+
+ncc build index.js -o dist/tmp/beep-beep --target es2020
+
+perl -i -pe's/__nccwpck_require__\.ab \+ "build/"\.\/build/g' dist/tmp/beep-beep/index.js
 
 pkg --targets 'node16-macos-x64' dist/tmp/beep-beep/index.js -o dist/beep-beep
 
-# rm -rf dist/tmp
+rm -rf dist/tmp
+
+tar -czvf dist/beep-beep-1.0.0-beta1-x86_64-apple-darwin.tar.gz dist/beep-beep
