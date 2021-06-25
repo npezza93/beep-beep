@@ -25,6 +25,8 @@ export default class Server {
   }
 
   run() {
+    this.config.watchFiles()
+    this.config.onChange(() => this.enqueuedPtys().forEach((pty) => pty.kill()))
     this.enqueuePtys()
   }
 
@@ -51,8 +53,9 @@ export default class Server {
     this.ptys[pty.port] = pty
   }
 
-  shutdown() {
+  async shutdown() {
     console.log("- Gracefully stopping, shutting down all ptys and servers")
+    await this.config.stopWatching()
     Object.keys(this.ptys).forEach(id => {
       if (this.ptys[id]) {
         this.ptys[id].dataEmitter.removeAllListeners()
