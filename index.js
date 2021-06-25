@@ -15,6 +15,7 @@ program
   .option('-s, --shell <file-path>', 'File path to the shell to run', process.env.SHELL || '/bin/zsh')
   .option('-a, --args <args>', 'Arguments to passed to the shell (comma separated)')
   .option('-c, --config-file <file-path>', 'Read options via specified config file')
+  .option('-w, --watch <absolute-paths>', 'If any of the supplied files change, the enqueued ptys are restarted (comma separated)')
   .helpOption('-h, --help', 'Prints help information')
   .addHelpText('before', `beep-beep-server\nRuns a beep-beep server of ptys\n`)
   .usage('[OPTIONS]')

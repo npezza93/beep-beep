@@ -1,9 +1,12 @@
-import path from 'path'
-import fs from 'fs'
+import path         from 'path'
+import fs           from 'fs'
+import chokidar     from 'chokidar'
+import EventEmitter from 'events'
 
 export default class Config {
   constructor(options) {
     this.options = options
+    this.dataEmitter = new EventEmitter()
 
     const filePath = path.join(options.configFile || '');
 
@@ -29,5 +32,31 @@ export default class Config {
 
   get args() {
     return this.json.args || this.options.args
+  }
+
+  get watch() {
+    return this.json.watch || this.options.watch
+  }
+
+  onChange(callback) {
+    this.dataEmitter.on('change', callback)
+  }
+
+  async stopWatching() {
+    if (this.watcher) {
+      this.dataEmitter.removeAllListeners()
+      await this.watcher.close()
+      console.log('Stopped watching files')
+    }
+  }
+
+  watchFiles() {
+    if (this.watch) {
+      const watchFiles =
+        this.watch.split(',').map(file => file.replace(/^\s+|\s+$/g, ''))
+
+      this.watcher = chokidar.watch(watchFiles)
+      this.watcher.on('change', path => this.dataEmitter.emit('change'))
+    }
   }
 }
