@@ -56,7 +56,7 @@ export default class Server {
   }
 
   shutdown() {
-    console.log("\nShutting down beep-beep\n")
+    console.log("- Gracefully stopping, shutting down all ptys and servers")
     Object.keys(this.ptys).forEach(id => {
       if (this.ptys[id]) {
         this.ptys[id].dataEmitter.removeAllListeners()
@@ -66,6 +66,9 @@ export default class Server {
     })
 
     this.server.close()
+
+    console.log(`=== beep-beep shutdown: ${new Date().toLocaleTimeString('en-US')} ===`)
+    console.log('Goodbye!')
     process.exit(0)
   }
 
