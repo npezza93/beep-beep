@@ -4,6 +4,7 @@ import { Command } from 'commander'
 import fs          from 'fs'
 import Client      from './src/client.js'
 import Server      from './src/server.js'
+import Config      from './src/config.js'
 
 const program = new Command()
 
@@ -18,7 +19,7 @@ program
   .addHelpText('before', `beep-beep-server\nRuns a beep-beep server of ptys\n`)
   .usage('[OPTIONS]')
   .action((options) => {
-    new Server(options.queue, options.shell, options.args).run()
+    new Server(new Config(options)).run()
   })
 
 program

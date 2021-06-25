@@ -3,10 +3,8 @@ import Pty  from './pty.js'
 import logo from './logo.js'
 
 export default class Server {
-  constructor(queue, shell, args) {
-    this.queue = queue
-    this.shell = shell
-    this.args  = args
+  constructor(config) {
+    this.config = config
     this.ptys = {}
 
     console.log(logo)
@@ -42,13 +40,13 @@ export default class Server {
       }
     }
 
-    const countToEnqueue = this.queue - queuedCount;
+    const countToEnqueue = this.config.queue - queuedCount;
 
     [...Array(Math.max(countToEnqueue, 0))].forEach(this.create.bind(this))
   }
 
   create() {
-    let pty = new Pty(this.shell, this.args)
+    let pty = new Pty(this.config.shell, this.config.args)
     pty.onExit((pid) => {
       delete this.ptys[pid]
       this.create()
