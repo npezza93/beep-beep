@@ -7,7 +7,7 @@ export default class Config {
 
     const filePath = path.join(options.configFile || '');
 
-    if (filePath && fs.existsSync(filePath)) {
+    if (options.configFile && fs.existsSync(filePath)) {
       try {
         this.json = JSON.parse(fs.readFileSync(filePath, 'utf8'))
       } catch (e) {
