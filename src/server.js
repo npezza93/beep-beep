@@ -15,13 +15,9 @@ export default class Server {
         const parsedData = JSON.parse(data)
 
         if (parsedData.action === 'connect') {
-          c.write(JSON.stringify(this.ptyPort()))
+          c.write(JSON.stringify(this.enqueuedPtys()[0].port))
         } else if (parsedData.action === 'resize') {
-          let pid = Object.keys(this.ptys).find(pid => {
-            return this.ptys[pid].port == parsedData.port
-          })
-
-          this.ptys[pid].resize(parsedData.columns, parsedData.rows)
+          this.ptys[parsedData.port].resize(parsedData.columns, parsedData.rows)
         }
       })
     }).
@@ -34,8 +30,8 @@ export default class Server {
 
   enqueuePtys() {
     let queuedCount = 0
-    for (const pid in this.ptys) {
-      if (!this.ptys[pid].connected) {
+    for (const port in this.ptys) {
+      if (!this.ptys[port].connected) {
         queuedCount++
       }
     }
@@ -47,12 +43,12 @@ export default class Server {
 
   create() {
     let pty = new Pty(this.config.shell, this.config.args)
-    pty.onExit((pid) => {
-      delete this.ptys[pid]
+    pty.onExit((port) => {
+      delete this.ptys[port]
       this.create()
     })
     pty.onConnected(this.enqueuePtys.bind(this))
-    this.ptys[pty.pid] = pty
+    this.ptys[pty.port] = pty
   }
 
   shutdown() {
@@ -72,9 +68,7 @@ export default class Server {
     process.exit(0)
   }
 
-  ptyPort() {
-    const pid = Object.keys(this.ptys).find(pid => !this.ptys[pid].connected)
-
-    return this.ptys[pid].port
+  enqueuedPtys() {
+    return Object.values(this.ptys).filter(pty => !pty.connected)
   }
 }

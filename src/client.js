@@ -10,7 +10,7 @@ export default class Client {
     socket.on('data', port => {
       socket.destroy()
 
-      this.port = parseInt(port.toString())
+      this.port = JSON.parse(port)
       const ptySocket = new Socket()
       const resizeSocket = this.socket()
 

@@ -51,7 +51,9 @@ export default class Pty {
   }
 
   get port() {
-    return this.server.address().port
+    this.serverPort ||= this.server.address().port
+
+    return this.serverPort
   }
 
   get sessionArgs() {
@@ -69,7 +71,7 @@ export default class Pty {
     this.pty.destroy()
     console.log(`[PID ${this.pid}] Killing ${this.fd} server`)
     this.server.close()
-    this.dataEmitter.emit('exit', this.pid)
+    this.dataEmitter.emit('exit', this.port)
     this.dataEmitter.removeAllListeners()
   }
 
