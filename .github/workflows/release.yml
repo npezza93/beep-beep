@@ -6,7 +6,7 @@ on:
 jobs:
   create-release:
     name: create-release
-    runs-on: macos-11
+    runs-on: ubuntu-latest
     steps:
       - name: Create artifacts directory
         run: mkdir artifacts
