@@ -24,7 +24,7 @@
   "homepage": "https://github.com/npezza93/beep-beep#readme",
   "dependencies": {
     "chokidar": "^3.5.2",
-    "commander": "^7.2.0",
+    "commander": "^8.0.0",
     "debounce-fn": "^5.0.0",
     "node-pty": "^0.10.1"
   },
