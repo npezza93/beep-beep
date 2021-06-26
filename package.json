@@ -1,6 +1,6 @@
 {
   "name": "@pezza/beep-beep",
-  "version": "1.0.0-beta1",
+  "version": "0.0.1",
   "description": "beep-beep maintains a pool of shells in the background so that when it's time to create a new terminal session, one is already warmed up and ready to go.",
   "type": "module",
   "scripts": {
