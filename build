@@ -5,6 +5,7 @@ rm -rf dist
 ncc build index.js -o dist/tmp/beep-beep --target es2020
 
 perl -i -pe's/__nccwpck_require__\.ab \+ "build/"\.\/build/g' dist/tmp/beep-beep/index.js
+perl -i -pe's/__nccwpck_require__\.ab \+ "fs/"\.\/fs/g' dist/tmp/beep-beep/index.js
 
 pkg --targets 'node16-macos-x64' dist/tmp/beep-beep/index.js -o dist/beep-beep
 
