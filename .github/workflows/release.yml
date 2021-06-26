@@ -64,6 +64,8 @@ jobs:
         registry-url: 'https://registry.npmjs.org'
 
     - run: npm install
+    - run: npm install -g pkg
+    - run: npm install -g ncc
 
     - name: Get release download URL
       uses: actions/download-artifact@v1
