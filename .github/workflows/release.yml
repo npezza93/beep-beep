@@ -91,7 +91,6 @@ jobs:
       run: |
         name="beep-beep-${{env.RELEASE_VERSION}}-${{ matrix.target }}"
         mkdir $name
-        mkdir -p "$name"/complete
         cp dist/beep-beep $name/
         tar czvf $name.tar.gz $name
 
