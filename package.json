@@ -25,7 +25,6 @@
   "dependencies": {
     "chokidar": "^3.5.2",
     "commander": "^8.0.0",
-    "debounce-fn": "^5.0.0",
     "node-pty": "^0.10.1"
   },
   "pkg": {

@@ -1,5 +1,4 @@
 import {spawn} from 'node-pty'
-import debounceFn from 'debounce-fn'
 import {createServer} from 'net'
 import EventEmitter from 'events'
 
@@ -14,7 +13,6 @@ export default class Pty {
 
     this.pty = spawn(this.file, this.fileArgs, this.sessionArgs)
     this.pty.pause()
-    this.pty.onData(data => this.bufferData(data))
 
     this.server = createServer(c => {
       console.log(`[PID ${this.pid}] Connected to ${this.fd}`)
@@ -28,7 +26,7 @@ export default class Pty {
     listen({ port: 0, exclusive: true }).
     on('connection', socket => {
       this.pty.resume()
-      this.onData(data => {
+      this.pty.onData(data => {
         if (socket.readyState === 'open') {
           socket.write(data)
         }
@@ -107,16 +105,5 @@ export default class Pty {
 
   onConnected(callback) {
     this.dataEmitter.on('connected', callback)
-  }
-
-  bufferData(data) {
-    this.bufferedData += data
-    if (!this.bufferTimeout) {
-      this.bufferTimeout = debounceFn(() => {
-        this.dataEmitter.emit('data', this.bufferedData)
-        this.bufferedData = ''
-        this.bufferTimeout = null
-      }, {wait: 5})()
-    }
   }
 }
