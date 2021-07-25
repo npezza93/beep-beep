@@ -23,7 +23,7 @@ export default class Pty {
       c.on('data', data => this.write(data))
       this.pty.onExit(() => c.end())
     }).
-    listen({ port: 0, exclusive: true }).
+    listen(`/tmp/beep-beep-${this.pid}.sock`).
     on('connection', socket => {
       this.pty.resume()
       this.pty.onData(data => {
@@ -33,7 +33,7 @@ export default class Pty {
       })
     })
 
-    console.log(`[PID ${this.pid}] Created ${this.fd}. Connect via localhost:${this.port}`)
+    console.log(`[PID ${this.pid}] Created ${this.fd}. Connect via /tmp/beep-beep-${this.pid}.sock`)
   }
 
   get shell() {
@@ -46,12 +46,6 @@ export default class Pty {
 
   get fd() {
     return this.pty._pty
-  }
-
-  get port() {
-    this.serverPort ||= this.server.address().port
-
-    return this.serverPort
   }
 
   get sessionArgs() {
@@ -69,7 +63,7 @@ export default class Pty {
     this.pty.destroy()
     console.log(`[PID ${this.pid}] Killing ${this.fd} server`)
     this.server.close()
-    this.dataEmitter.emit('exit', this.port)
+    this.dataEmitter.emit('exit', this.pid)
     this.dataEmitter.removeAllListeners()
   }
 

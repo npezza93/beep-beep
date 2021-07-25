@@ -15,9 +15,9 @@ export default class Server {
         const parsedData = JSON.parse(data)
 
         if (parsedData.action === 'connect') {
-          c.write(JSON.stringify(this.enqueuedPtys()[0].port))
+          c.write(JSON.stringify(this.enqueuedPtys()[0].pid))
         } else if (parsedData.action === 'resize') {
-          this.ptys[parsedData.port].resize(parsedData.columns, parsedData.rows)
+          this.ptys[parsedData.pid].resize(parsedData.columns, parsedData.rows)
         }
       })
     }).
@@ -32,8 +32,8 @@ export default class Server {
 
   enqueuePtys() {
     let queuedCount = 0
-    for (const port in this.ptys) {
-      if (!this.ptys[port].connected) {
+    for (const pid in this.ptys) {
+      if (!this.ptys[pid].connected) {
         queuedCount++
       }
     }
@@ -45,12 +45,12 @@ export default class Server {
 
   create() {
     let pty = new Pty(this.config.shell, this.config.args)
-    pty.onExit((port) => {
-      delete this.ptys[port]
+    pty.onExit((pid) => {
+      delete this.ptys[pid]
       this.create()
     })
     pty.onConnected(this.enqueuePtys.bind(this))
-    this.ptys[pty.port] = pty
+    this.ptys[pty.pid] = pty
   }
 
   async shutdown() {

@@ -7,14 +7,14 @@ export default class Client {
     process.stdin.resume()
 
     let socket = this.socket()
-    socket.on('data', port => {
+    socket.on('data', pid => {
       socket.destroy()
 
-      this.port = JSON.parse(port)
+      this.pid = JSON.parse(pid)
       const ptySocket = new Socket()
       const resizeSocket = this.socket()
 
-      ptySocket.connect(this.port)
+      ptySocket.connect(`/tmp/beep-beep-${this.pid}.sock`)
 
       resizeSocket.write(this.resizeData())
 
@@ -56,7 +56,7 @@ export default class Client {
 
   resizeData() {
     return JSON.stringify({
-      action: "resize", port: this.port,
+      action: "resize", pid: this.pid,
       columns: this.columns, rows: this.rows
     })
   }
