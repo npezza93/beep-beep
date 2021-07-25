@@ -25,7 +25,7 @@ program
 
 program
   .helpOption('-h, --help', 'Prints help information')
-  .version('beep-beep 1.0.0-beta1', '-v, --version', 'Prints version information')
+  .version('beep-beep 0.0.3-alpha', '-v, --version', 'Prints version information')
   .addHelpText('before', `${program.version()}\nNick Pezza <pezza@hey.com>\n`)
   .usage('[OPTIONS] [SUBCOMMAND]')
   .action(() => new Client().run())
